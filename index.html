@@ -427,7 +427,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+        import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         // ⚠️ REPLACE THIS BLOCK WITH YOUR FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyD0TiPq28g7GGs2NNG4038baAmAOBRxbjs",
@@ -518,25 +518,34 @@
         }
 
         function renderGridUI() {
-            const grid = document.getElementById('grid-container');
-            let completedCount = 0;
-            grid.innerHTML = '';
+          const grid = document.getElementById('grid-container');
+    let completedCount = 0;
+    grid.innerHTML = '';
 
-            tasksArray.forEach(task => {
-                if (task.isCompleted) completedCount++;
-                const card = document.createElement('div');
-                card.className = `task-card ${task.isCompleted ? 'completed' : ''}`;
-                card.onclick = () => toggleTask(task.id, task.isCompleted);
-                card.innerHTML = `
-                    <div class="card-header-text">${task.title}</div>
-                    <div class="card-footer">
-                        <span style="font-size:0.75rem; color:#666; font-weight:bold;">Active Task</span>
-                        <div class="status-icon">${task.isCompleted ? '✓' : '✖'}</div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-            document.getElementById('marks-display').innerHTML = `<span>${completedCount}</span> / ${tasksArray.length} MARKS`;
+    tasksArray.forEach(task => {
+        if (task.isCompleted) completedCount++;
+        const card = document.createElement('div');
+        card.className = `task-card ${task.isCompleted ? 'completed' : ''}`;
+        
+        // Clicking the card toggles it
+        card.onclick = () => toggleTask(task.id, task.isCompleted);
+        
+        card.innerHTML = `
+            <div class="card-header-text">${task.title}</div>
+            <div class="card-footer">
+                <span style="font-size:0.75rem; color:#666; font-weight:bold;">Active Task</span>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button class="text-btn" style="color: var(--error-red); text-decoration: none; font-size: 1.1rem; padding: 4px;" 
+                            onclick="event.stopPropagation(); deleteTask('${task.id}')">
+                        🗑️
+                    </button>
+                    <div class="status-icon">${task.isCompleted ? '✓' : '✖'}</div>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+    document.getElementById('marks-display').innerHTML = `<span>${completedCount}</span> / ${tasksArray.length} MARKS`;
         }
 
         window.addNewTask = async () => {
@@ -557,7 +566,16 @@
         };
 
         window.toggleTask = async (id, currentStatus) => { await updateDoc(doc(db, "tasks", id), { isCompleted: !currentStatus }); };
-
+        window.deleteTask = async (id) => {
+    if (confirm("Are you sure you want to delete this task?")) {
+        try {
+            await deleteDoc(doc(db, "tasks", id));
+        } catch (error) {
+            console.error("Error deleting document: ", error);
+            alert("Failed to delete task: " + error.message);
+        }
+    }
+};
         async function checkDailyReset() {
             const todayStr = new Date().toDateString();
             const lastReset = localStorage.getItem(`lastReset_${currentUser.uid}`);
