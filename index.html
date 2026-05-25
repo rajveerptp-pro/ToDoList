@@ -540,10 +540,20 @@
         }
 
         window.addNewTask = async () => {
-            const input = document.getElementById('task-input');
-            if (!input.value.trim()) return;
-            await addDoc(collection(db, "tasks"), { title: input.value.trim(), isCompleted: false, userId: currentUser.uid });
-            closeModal();
+           const input = document.getElementById('task-input');
+    if (!input.value.trim()) return;
+    
+    try {
+        await addDoc(collection(db, "tasks"), { 
+            title: input.value.trim(), 
+            isCompleted: false, 
+            userId: currentUser.uid 
+        });
+        closeModal();
+    } catch (error) {
+        console.error(error);
+        alert("DATABASE ERROR: " + error.message); // This will pop up on your screen if it fails
+    }
         };
 
         window.toggleTask = async (id, currentStatus) => { await updateDoc(doc(db, "tasks", id), { isCompleted: !currentStatus }); };
