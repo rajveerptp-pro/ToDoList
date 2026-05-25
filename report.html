@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -144,7 +145,8 @@
             width: 24px;
             background-color: #2c2c2e;
             border-radius: 6px 6px 0 0;
-            height: 0%; /* Dynamic allocation */
+            height: 0%;
+            /* Dynamic allocation */
             transition: height 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
         }
@@ -192,6 +194,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="mobile-frame">
@@ -216,13 +219,34 @@
         <div class="chart-container">
             <div class="chart-header">7-Day Completion Tracker</div>
             <div class="bar-chart" id="analytics-bars">
-                <div class="bar-wrapper"><div class="bar" id="bar-Mon"><span class="bar-value-popup">0</span></div><span class="bar-label">Mon</span></div>
-                <div class="bar-wrapper"><div class="bar" id="bar-Tue"><span class="bar-value-popup">0</span></div><span class="bar-label">Tue</span></div>
-                <div class="bar-wrapper"><div class="bar" id="bar-Wed"><span class="bar-value-popup">0</span></div><span class="bar-label">Wed</span></div>
-                <div class="bar-wrapper"><div class="bar" id="bar-Thu"><span class="bar-value-popup">0</span></div><span class="bar-label">Thu</span></div>
-                <div class="bar-wrapper"><div class="bar" id="bar-Fri"><span class="bar-value-popup">0</span></div><span class="bar-label">Fri</span></div>
-                <div class="bar-wrapper"><div class="bar" id="bar-Sat"><span class="bar-value-popup">0</span></div><span class="bar-label">Sat</span></div>
-                <div class="bar-wrapper"><div class="bar" id="bar-Sun"><span class="bar-value-popup">0</span></div><span class="bar-label">Sun</span></div>
+                <div class="bar-wrapper">
+                    <div class="bar" id="bar-Mon"><span class="bar-value-popup">0</span></div><span
+                        class="bar-label">Mon</span>
+                </div>
+                <div class="bar-wrapper">
+                    <div class="bar" id="bar-Tue"><span class="bar-value-popup">0</span></div><span
+                        class="bar-label">Tue</span>
+                </div>
+                <div class="bar-wrapper">
+                    <div class="bar" id="bar-Wed"><span class="bar-value-popup">0</span></div><span
+                        class="bar-label">Wed</span>
+                </div>
+                <div class="bar-wrapper">
+                    <div class="bar" id="bar-Thu"><span class="bar-value-popup">0</span></div><span
+                        class="bar-label">Thu</span>
+                </div>
+                <div class="bar-wrapper">
+                    <div class="bar" id="bar-Fri"><span class="bar-value-popup">0</span></div><span
+                        class="bar-label">Fri</span>
+                </div>
+                <div class="bar-wrapper">
+                    <div class="bar" id="bar-Sat"><span class="bar-value-popup">0</span></div><span
+                        class="bar-label">Sat</span>
+                </div>
+                <div class="bar-wrapper">
+                    <div class="bar" id="bar-Sun"><span class="bar-value-popup">0</span></div><span
+                        class="bar-label">Sun</span>
+                </div>
             </div>
         </div>
 
@@ -239,12 +263,12 @@
         // ⚠️ PASTE YOUR EXACT COPIED FIREBASE CONFIG OBJECT HERE
         const firebaseConfig = {
             apiKey: "AIzaSyArhiDmd8NEUnRAAZasFzxtY8aDCofErJk",
-  authDomain: "achiver-9fd13.firebaseapp.com",
-  projectId: "achiver-9fd13",
-  storageBucket: "achiver-9fd13.firebasestorage.app",
-  messagingSenderId: "909106740204",
-  appId: "1:909106740204:web:fce2bce74d914881dddec9",
-  measurementId: "G-LKM2ZMVQYP"
+            authDomain: "achiver-9fd13.firebaseapp.com",
+            projectId: "achiver-9fd13",
+            storageBucket: "achiver-9fd13.firebasestorage.app",
+            messagingSenderId: "909106740204",
+            appId: "1:909106740204:web:fce2bce74d914881dddec9",
+            measurementId: "G-LKM2ZMVQYP"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -263,7 +287,7 @@
 
         function calculateWeeklyAnalytics(uid) {
             const q = query(collection(db, "tasks"), where("userId", "==", uid));
-            
+
             onSnapshot(q, (snapshot) => {
                 let totalTasksCount = 0;
                 let completedTasksCount = 0;
@@ -277,7 +301,7 @@
 
                 // Calculate Live Real-Time Analytics Percentage Ratio
                 const accuracy = totalTasksCount > 0 ? Math.round((completedTasksCount / totalTasksCount) * 100) : 0;
-                
+
                 // Render Numbers into Dashboard Cards
                 document.getElementById('weekly-accuracy').innerText = `${accuracy}%`;
                 document.getElementById('weekly-total-completed').innerText = completedTasksCount;
@@ -292,7 +316,7 @@
             // Find current system day name shortcut (e.g. "Mon", "Tue")
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             const currentDayName = days[new Date().getDay()];
-            
+
             // Save today's historical metric into browser store structure
             localStorage.setItem(`history_score_${currentDayName}`, percentage);
 
@@ -301,7 +325,7 @@
                 const targetBar = document.getElementById(`bar-${day}`);
                 if (targetBar) {
                     const savedValue = localStorage.getItem(`history_score_${day}`) || 0;
-                    
+
                     // Direct layout property update to alter CSS heights dynamically
                     targetBar.style.height = `${savedValue}%`;
                     targetBar.querySelector('.bar-value-popup').innerText = `${savedValue}%`;
@@ -327,4 +351,5 @@
         }
     </script>
 </body>
+
 </html>
