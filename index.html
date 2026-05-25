@@ -11,6 +11,7 @@
             --accent-lime: #bffd00;
             --text-muted: #8e8e93;
             --border-dark: #1c1c1e;
+            --error-red: #ff453a;
         }
 
         @font-face {
@@ -43,16 +44,83 @@
             position: relative;
         }
 
-        /* --- Auth Screen Styling --- */
+        /* =========================================
+           1. SPLASH / AUTHENTICATION SCREEN 
+           ========================================= */
         .auth-screen {
             display: flex;
             flex-direction: column;
             justify-content: center;
             gap: 16px;
-            height: 80vh;
+            min-height: 90vh;
+            padding-bottom: 40px;
         }
 
-        /* --- Top Header Navigation --- */
+        .splash-title {
+            font-family: 'Impact-Custom', 'Arial Black', sans-serif;
+            font-size: 3.5rem;
+            line-height: 0.95;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        .auth-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background-color: #1c1c1e;
+            border: 2px solid transparent;
+            color: white;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .auth-input:focus {
+            border-color: var(--accent-lime);
+        }
+
+        .btn-primary {
+            background-color: var(--card-white);
+            color: #000000;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .toggle-mode {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-decoration: underline;
+            cursor: pointer;
+            text-align: left;
+            margin-top: 8px;
+        }
+
+        #error-message {
+            color: var(--error-red);
+            font-size: 0.85rem;
+            font-weight: bold;
+            min-height: 20px;
+        }
+
+        /* =========================================
+           2. MAIN APP SCREEN 
+           ========================================= */
         .top-nav {
             display: flex;
             justify-content: space-between;
@@ -68,22 +136,35 @@
             font-weight: 500;
         }
 
-        .logout-btn {
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .text-btn {
             background: transparent;
             border: none;
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             cursor: pointer;
             text-decoration: underline;
         }
 
-        /* --- Aggressive Display Headers --- */
+        .report-btn {
+            color: var(--accent-lime);
+            font-weight: bold;
+            text-decoration: none;
+            border: 1px solid #2c2c2e;
+            padding: 6px 12px;
+            border-radius: 10px;
+        }
+
         .main-title {
             font-family: 'Impact-Custom', 'Arial Black', sans-serif;
             font-size: 3.2rem;
             text-transform: uppercase;
             line-height: 0.95;
-            letter-spacing: 0.5px;
             margin-bottom: 12px;
         }
 
@@ -100,25 +181,17 @@
             color: var(--text-muted);
         }
 
-        .marks-counter span {
-            color: var(--accent-lime);
-        }
+        .marks-counter span { color: var(--accent-lime); }
 
         .action-icon-btn {
-            width: 40px;
-            height: 40px;
-            border: 1px solid var(--border-dark);
-            border-radius: 12px;
-            background: transparent;
-            color: white;
-            font-size: 1.4rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 40px; height: 40px;
+            border: 1px solid var(--border-dark); border-radius: 12px;
+            background: transparent; color: white;
+            font-size: 1.4rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        /* --- Grid System for Tasks --- */
+        /* Grid System */
         .tasks-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -140,57 +213,34 @@
         }
 
         .card-header-text {
-            font-size: 1.15rem;
-            font-weight: 700;
-            line-height: 1.2;
-            word-wrap: break-word;
-            margin-bottom: 20px;
+            font-size: 1.15rem; font-weight: 700; line-height: 1.2;
+            word-wrap: break-word; margin-bottom: 20px;
         }
 
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
+        .card-footer { display: flex; justify-content: space-between; align-items: center; }
         .status-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid #000000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 900;
+            width: 20px; height: 20px; border-radius: 50%;
+            border: 2px solid #000000; display: flex; align-items: center;
+            justify-content: center; font-size: 0.7rem; font-weight: 900;
         }
 
         .task-card.completed { background-color: var(--accent-lime); }
         .task-card.completed .status-icon { background-color: #000000; color: var(--accent-lime); border-color: #000000; }
 
-        /* --- Modal & Inputs --- */
+        /* Modal */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            justify-content: center;
-            align-items: flex-end;
-            z-index: 100;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8); display: none;
+            justify-content: center; align-items: flex-end; z-index: 100;
         }
 
         .modal-content {
-            width: 100%; max-width: 440px;
-            background-color: #1c1c1e;
+            width: 100%; max-width: 440px; background-color: #1c1c1e;
             border-top-left-radius: 24px; border-top-right-radius: 24px;
             padding: 24px; display: flex; flex-direction: column; gap: 16px;
         }
 
-        .modal-input {
-            background: #2c2c2e; border: none; border-radius: 14px;
-            padding: 16px; color: white; font-size: 1rem; outline: none;
-        }
-
+        .modal-input { background: #2c2c2e; border: none; border-radius: 14px; padding: 16px; color: white; font-size: 1rem; outline: none; }
         .btn { padding: 16px; border-radius: 14px; font-size: 1rem; font-weight: bold; border: none; cursor: pointer; }
         .btn-cancel { background-color: var(--card-white); color: #000000; }
         .btn-confirm { background-color: var(--accent-lime); color: #000000; }
@@ -199,19 +249,29 @@
 <body>
 
     <div class="mobile-frame">
+        
         <div id="auth-view" class="auth-screen">
-            <div class="main-title">STAY<br>ACCOUNTABLE</div>
-            <input type="email" id="auth-email" class="modal-input" placeholder="Email Address">
-            <input type="password" id="auth-password" class="modal-input" placeholder="Password">
-            <button class="btn btn-confirm" onclick="handleAuth('login')">LOGIN</button>
-            <button class="btn btn-cancel" onclick="handleAuth('signup')">CREATE ACCOUNT</button>
+            <div class="splash-title">You suck at taking notes brother, you need us :)</div>
+            
+            <div id="error-message"></div>
+
+            <div class="auth-inputs">
+                <input type="email" id="auth-email" class="auth-input" placeholder="Email Address">
+                <input type="password" id="auth-password" class="auth-input" placeholder="Password">
+            </div>
+
+            <button class="btn-primary" id="auth-submit-btn" onclick="processAuth()">Join Now</button>
+            <button class="toggle-mode" id="auth-toggle-btn" onclick="toggleAuthMode()">Already have an account? Log in here.</button>
         </div>
 
         <div id="app-view" style="display: none;">
             <div class="top-nav">
                 <div class="user-profile">
-                    <span>⚡ Welcome, Chad</span>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
+                    <span>👤 Welcome back</span>
+                </div>
+                <div class="nav-links">
+                    <a href="report.html" class="report-btn">Stats</a>
+                    <button class="text-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
 
@@ -228,9 +288,9 @@
 
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal-content">
-            <div class="modal-title" style="font-family: 'Impact-Custom'; font-size: 2rem;">New Task & Marks</div>
+            <div class="main-title" style="font-size: 2rem;">New Task</div>
             <input type="text" id="task-input" class="modal-input" placeholder="Type assignment objective...">
-            <div class="modal-buttons" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
                 <button class="btn btn-confirm" onclick="addNewTask()">Confirm</button>
             </div>
@@ -240,68 +300,96 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ⚠️ PASTE YOUR COPIED FIREBASE CONFIG OBJECT HERE
+        // ⚠️ REPLACE THIS BLOCK WITH YOUR FIREBASE CONFIG
         const firebaseConfig = {
-            apiKey: "AIzaSyArhiDmd8NEUnRAAZasFzxtY8aDCofErJk",
-            authDomain: "achiver-9fd13.firebaseapp.com",
-            projectId: "achiver-9fd13",
-            storageBucket: "achiver-9fd13.firebasestorage.app",
-            messagingSenderId: "909106740204",
-            appId: "1:909106740204:web:fce2bce74d914881dddec9"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
-        // Initialize Firebase instances
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         let currentUser = null;
         let tasksArray = [];
+        let isLoginMode = false;
 
-        // --- AUTH LOGIC ---
-        window.handleAuth = async (type) => {
-            const email = document.getElementById('auth-email').value;
+        // --- UI TOGGLING FOR AUTH SCREEN ---
+        window.toggleAuthMode = () => {
+            isLoginMode = !isLoginMode;
+            document.getElementById('error-message').innerText = "";
+            
+            if (isLoginMode) {
+                document.getElementById('auth-submit-btn').innerText = "Log In";
+                document.getElementById('auth-submit-btn').style.backgroundColor = "var(--accent-lime)";
+                document.getElementById('auth-toggle-btn').innerText = "Need an account? Sign up here.";
+            } else {
+                document.getElementById('auth-submit-btn').innerText = "Join Now";
+                document.getElementById('auth-submit-btn').style.backgroundColor = "var(--card-white)";
+                document.getElementById('auth-toggle-btn').innerText = "Already have an account? Log in here.";
+            }
+        };
+
+        // --- AUTHENTICATION PROCESSING ---
+        window.processAuth = async () => {
+            const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
+            const errorBox = document.getElementById('error-message');
+            errorBox.innerText = "";
+
+            if (!email || !password) { errorBox.innerText = "Please fill in all fields."; return; }
+
             try {
-                if (type === 'signup') await createUserWithEmailAndPassword(auth, email, password);
-                else await signInWithEmailAndPassword(auth, email, password);
-            } catch (err) { alert(err.message); }
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                }
+            } catch (error) {
+                console.error(error);
+                if (error.code === 'auth/email-already-in-use') errorBox.innerText = "Email already registered.";
+                else if (error.code === 'auth/invalid-credential') errorBox.innerText = "Incorrect email or password.";
+                else if (error.code === 'auth/configuration-not-found') errorBox.innerText = "Firebase Error: Enable Email/Password in console.";
+                else errorBox.innerText = error.message;
+            }
         };
 
         window.logout = () => signOut(auth);
 
-        // Listen for user profile state shifts
+        // --- STATE LISTENER (Switches between Login and App) ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-view').style.display = 'none';
                 document.getElementById('app-view').style.display = 'block';
                 syncTasks();
-                setInterval(checkDailyReset, 20000); // Check reset status in the background
+                setInterval(checkDailyReset, 20000);
             } else {
                 currentUser = null;
                 document.getElementById('auth-view').style.display = 'flex';
                 document.getElementById('app-view').style.display = 'none';
+                document.getElementById('auth-password').value = ""; // Clear password on logout
             }
         });
 
-        // --- LIVE DATABASE SYNC ---
+        // --- FIRESTORE SYNC & UI RENDERING ---
         function syncTasks() {
             const q = query(collection(db, "tasks"), where("userId", "==", currentUser.uid));
             onSnapshot(q, (snapshot) => {
                 tasksArray = [];
-                snapshot.forEach(doc => {
-                    tasksArray.push({ id: doc.id, ...doc.data() });
-                });
-                renderUI();
+                snapshot.forEach(doc => { tasksArray.push({ id: doc.id, ...doc.data() }); });
+                renderGridUI();
                 checkDailyReset();
             });
         }
 
-        // --- RENDER SCREEN UI ---
-        function renderUI() {
+        function renderGridUI() {
             const grid = document.getElementById('grid-container');
             let completedCount = 0;
             grid.innerHTML = '';
@@ -315,7 +403,7 @@
                 card.innerHTML = `
                     <div class="card-header-text">${task.title}</div>
                     <div class="card-footer">
-                        <span class="date-subtext">Task Active</span>
+                        <span style="font-size:0.75rem; color:#666; font-weight:bold;">Active Task</span>
                         <div class="status-icon">${task.isCompleted ? '✓' : '✖'}</div>
                     </div>
                 `;
@@ -324,7 +412,7 @@
             document.getElementById('marks-display').innerHTML = `<span>${completedCount}</span> / ${tasksArray.length} MARKS`;
         }
 
-        // --- DATABASE ACTIONS ---
+        // --- TASK ACTIONS ---
         window.addNewTask = async () => {
             const input = document.getElementById('task-input');
             if (!input.value.trim()) return;
@@ -340,7 +428,7 @@
             await updateDoc(doc(db, "tasks", id), { isCompleted: !currentStatus });
         };
 
-        // --- AUTOMATIC 24-HOUR CLOCK RESET ---
+        // --- 24-HOUR RESET LOOP ---
         async function checkDailyReset() {
             const todayStr = new Date().toDateString();
             const lastReset = localStorage.getItem(`lastReset_${currentUser.uid}`);
@@ -358,7 +446,7 @@
             }
         }
 
-        // --- UI DRAWERS OVERLAYS ---
+        // --- MODAL CONTROLS ---
         window.openModal = () => { document.getElementById('modal-overlay').style.display = 'flex'; document.getElementById('task-input').focus(); }
         window.closeModal = () => { document.getElementById('modal-overlay').style.display = 'none'; document.getElementById('task-input').value = ''; }
     </script>
