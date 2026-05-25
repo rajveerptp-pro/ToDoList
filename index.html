@@ -430,13 +430,13 @@
 
         // ⚠️ REPLACE THIS BLOCK WITH YOUR FIREBASE CONFIG
         const firebaseConfig = {
-            apiKey: "AIzaSyArhiDmd8NEUnRAAZasFzxtY8aDCofErJk",
-            authDomain: "achiver-9fd13.firebaseapp.com",
-            projectId: "achiver-9fd13",
-            storageBucket: "achiver-9fd13.firebasestorage.app",
-            messagingSenderId: "909106740204",
-            appId: "1:909106740204:web:fce2bce74d914881dddec9",
-            measurementId: "G-LKM2ZMVQYP"
+            apiKey: "AIzaSyD0TiPq28g7GGs2NNG4038baAmAOBRxbjs",
+            authDomain: "mb-app-9cd7b.firebaseapp.com",
+            projectId: "mb-app-9cd7b",
+            storageBucket: "mb-app-9cd7b.firebasestorage.app",
+            messagingSenderId: "663946107337",
+            appId: "1:663946107337:web:fa47b6208b9106d088b018",
+            measurementId: "G-8KM63MRQNP"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -540,20 +540,20 @@
         }
 
         window.addNewTask = async () => {
-           const input = document.getElementById('task-input');
-    if (!input.value.trim()) return;
-    
-    try {
-        await addDoc(collection(db, "tasks"), { 
-            title: input.value.trim(), 
-            isCompleted: false, 
-            userId: currentUser.uid 
-        });
-        closeModal();
-    } catch (error) {
-        console.error(error);
-        alert("DATABASE ERROR: " + error.message); // This will pop up on your screen if it fails
-    }
+            const input = document.getElementById('task-input');
+            if (!input.value.trim()) return;
+
+            try {
+                await addDoc(collection(db, "tasks"), {
+                    title: input.value.trim(),
+                    isCompleted: false,
+                    userId: currentUser.uid
+                });
+                closeModal();
+            } catch (error) {
+                console.error(error);
+                alert("DATABASE ERROR: " + error.message); // This will pop up on your screen if it fails
+            }
         };
 
         window.toggleTask = async (id, currentStatus) => { await updateDoc(doc(db, "tasks", id), { isCompleted: !currentStatus }); };
