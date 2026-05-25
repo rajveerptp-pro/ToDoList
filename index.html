@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Daily Quests Tracker</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-white: #ffffff;
+            --accent-lime: #bffd00;
+            --text-muted: #8e8e93;
+            --border-dark: #1c1c1e;
+        }
+
+        @font-face {
+            font-family: 'Impact-Custom';
+            src: local('Impact'), local('Arial Black');
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #ffffff;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .mobile-frame {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* --- Top Header Navigation --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0 20px 0;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .avatar {
+            width: 28px;
+            height: 28px;
+            background: #2c2c2e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 16px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* --- Aggressive Display Headers --- */
+        .main-title {
+            font-family: 'Impact-Custom', 'Arial Black', sans-serif;
+            font-size: 3.2rem;
+            text-transform: uppercase;
+            line-height: 0.95;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .marks-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 24px;
+        }
+
+        .marks-counter {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-muted);
+        }
+
+        .marks-counter span {
+            color: var(--accent-lime);
+        }
+
+        .action-icon-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            background: transparent;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Filter Categories --- */
+        .filter-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 16px;
+            margin-bottom: 12px;
+        }
+        .filter-container::-webkit-scrollbar { display: none; }
+
+        .tag {
+            padding: 6px 14px;
+            border: 1px solid var(--border-dark);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            white-space: nowrap;
+            background: transparent;
+            color: white;
+        }
+        .tag.active {
+            background-color: var(--accent-lime);
+            color: #000000;
+            border-color: var(--accent-lime);
+        }
+
+        /* --- Grid System for Tasks --- */
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            align-items: start;
+        }
+
+        /* Individual Grid Cards */
+        .task-card {
+            background-color: var(--card-white);
+            color: #000000;
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 120px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.1s ease, background-color 0.2s ease;
+        }
+
+        .task-card:active {
+            transform: scale(0.96);
+        }
+
+        .card-header-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.2;
+            word-wrap: break-word;
+            margin-bottom: 20px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .date-subtext {
+            font-size: 0.75rem;
+            color: #666666;
+            font-weight: 500;
+        }
+
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 900;
+        }
+
+        /* --- Completed State (Turns Lime Green) --- */
+        .task-card.completed {
+            background-color: var(--accent-lime);
+        }
+        
+        .task-card.completed .status-icon {
+            background-color: #000000;
+            color: var(--accent-lime);
+            border-color: #000000;
+        }
+
+        /* --- Task Bottom Sheet Modal --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 100;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 440px;
+            background-color: #1c1c1e;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-title {
+            font-family: 'Impact-Custom', sans-serif;
+            font-size: 2rem;
+            text-transform: uppercase;
+        }
+
+        .modal-input {
+            background: #2c2c2e;
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: var(--card-white);
+            color: #000000;
+        }
+
+        .btn-confirm {
+            background-color: var(--accent-lime);
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-frame">
+        <div class="top-nav">
+            <div class="user-profile">
+                <div class="avatar">👤</div>
+                <span>Welcome back, Chad</span>
+            </div>
+            <div class="nav-icons">
+                <span>🔍</span>
+                <span>🔔</span>
+            </div>
+        </div>
+
+        <div class="main-title">Your Notes</div>
+        
+        <div class="marks-row">
+            <div class="marks-counter" id="marks-display">0 / 0 MARKS</div>
+            <button class="action-icon-btn" onclick="openModal()">+</button>
+        </div>
+
+        <div class="filter-container">
+            <button class="tag active">#All</button>
+            <button class="tag">#work</button>
+            <button class="tag">#Personal</button>
+            <button class="tag">#Fitness</button>
+        </div>
+
+        <div class="tasks-grid" id="grid-container"></div>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title">New Task & Marks</div>
+            <input type="text" id="task-input" class="modal-input" placeholder="Type assignment objective..." autocomplete="off">
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-confirm" onclick="addNewTask()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('brutalTasks')) || [];
+
+        // 1. RENDER INTERFACE GRID LAYOUT
+        function renderUI() {
+            const grid = document.getElementById('grid-container');
+            const marksDisplay = document.getElementById('marks-display');
+            
+            grid.innerHTML = '';
+            let completedCount = 0;
+
+            tasks.forEach((task, index) => {
+                if (task.isCompleted) completedCount++;
+
+                const card = document.createElement('div');
+                card.className = `task-card ${task.isCompleted ? 'completed' : ''}`;
+                card.onclick = () => toggleTask(index);
+
+                card.innerHTML = `
+                    <div class="card-header-text">${task.title}</div>
+                    <div class="card-footer">
+                        <span class="date-subtext">${task.dateCreated}</span>
+                        <div class="status-icon">${task.isCompleted ? '✓' : '✖'}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            marksDisplay.innerHTML = `<span>${completedCount}</span> / ${tasks.length} MARKS`;
+            localStorage.setItem('brutalTasks', JSON.stringify(tasks));
+        }
+
+        // 2. TOGGLE COMPLETE FLAG
+        function toggleTask(index) {
+            tasks[index].isCompleted = !tasks[index].isCompleted;
+            renderUI();
+        }
+
+        // 3. ACTION HANDLERS FOR MODAL MODES
+        function openModal() { document.getElementById('modal-overlay').style.display = 'flex'; document.getElementById('task-input').focus(); }
+        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; document.getElementById('task-input').value = ''; }
+
+        function addNewTask() {
+            const textInput = document.getElementById('task-input').value.trim();
+            if(!textInput) return;
+
+            const formattedDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+            tasks.push({
+                title: textInput,
+                isCompleted: false,
+                dateCreated: formattedDate
+            });
+
+            closeModal();
+            renderUI();
+        }
+
+        // 4. AUTOMATED 24-HOUR RESET SCHEDULER (RESPAWN LOOP)
+        function triggerDailyReset() {
+            const savedResetDay = localStorage.getItem('lastBrutalResetDay');
+            const systemToday = new Date().toDateString();
+
+            // Resets flags back to incomplete if date transitions forward
+            if (savedResetDay !== systemToday) {
+                tasks = tasks.map(t => ({ ...t, isCompleted: false }));
+                localStorage.setItem('lastBrutalResetDay', systemToday);
+                renderUI();
+            }
+        }
+
+        // Boot-up checks
+        triggerDailyReset();
+        renderUI();
+
+        // Active background heartbeat listening loop
+        setInterval(triggerDailyReset, 15000);
+    </script>
+</body>
+</html>
