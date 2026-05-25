@@ -22,7 +22,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -43,6 +43,15 @@
             position: relative;
         }
 
+        /* --- Auth Screen Styling --- */
+        .auth-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+            height: 80vh;
+        }
+
         /* --- Top Header Navigation --- */
         .top-nav {
             display: flex;
@@ -59,22 +68,13 @@
             font-weight: 500;
         }
 
-        .avatar {
-            width: 28px;
-            height: 28px;
-            background: #2c2c2e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .logout-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
             font-size: 0.8rem;
-        }
-
-        .nav-icons {
-            display: flex;
-            gap: 16px;
-            font-size: 1.2rem;
             cursor: pointer;
+            text-decoration: underline;
         }
 
         /* --- Aggressive Display Headers --- */
@@ -118,33 +118,6 @@
             justify-content: center;
         }
 
-        /* --- Filter Categories --- */
-        .filter-container {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 16px;
-            margin-bottom: 12px;
-        }
-        .filter-container::-webkit-scrollbar { display: none; }
-
-        .tag {
-            padding: 6px 14px;
-            border: 1px solid var(--border-dark);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            white-space: nowrap;
-            background: transparent;
-            color: white;
-        }
-        .tag.active {
-            background-color: var(--accent-lime);
-            color: #000000;
-            border-color: var(--accent-lime);
-        }
-
         /* --- Grid System for Tasks --- */
         .tasks-grid {
             display: grid;
@@ -153,7 +126,6 @@
             align-items: start;
         }
 
-        /* Individual Grid Cards */
         .task-card {
             background-color: var(--card-white);
             color: #000000;
@@ -165,11 +137,6 @@
             min-height: 120px;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.1s ease, background-color 0.2s ease;
-        }
-
-        .task-card:active {
-            transform: scale(0.96);
         }
 
         .card-header-text {
@@ -186,12 +153,6 @@
             align-items: center;
         }
 
-        .date-subtext {
-            font-size: 0.75rem;
-            color: #666666;
-            font-weight: 500;
-        }
-
         .status-icon {
             width: 20px;
             height: 20px;
@@ -204,25 +165,14 @@
             font-weight: 900;
         }
 
-        /* --- Completed State (Turns Lime Green) --- */
-        .task-card.completed {
-            background-color: var(--accent-lime);
-        }
-        
-        .task-card.completed .status-icon {
-            background-color: #000000;
-            color: var(--accent-lime);
-            border-color: #000000;
-        }
+        .task-card.completed { background-color: var(--accent-lime); }
+        .task-card.completed .status-icon { background-color: #000000; color: var(--accent-lime); border-color: #000000; }
 
-        /* --- Task Bottom Sheet Modal --- */
+        /* --- Modal & Inputs --- */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
             display: none;
             justify-content: center;
             align-items: flex-end;
@@ -230,179 +180,187 @@
         }
 
         .modal-content {
-            width: 100%;
-            max-width: 440px;
+            width: 100%; max-width: 440px;
             background-color: #1c1c1e;
-            border-top-left-radius: 24px;
-            border-top-right-radius: 24px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .modal-title {
-            font-family: 'Impact-Custom', sans-serif;
-            font-size: 2rem;
-            text-transform: uppercase;
+            border-top-left-radius: 24px; border-top-right-radius: 24px;
+            padding: 24px; display: flex; flex-direction: column; gap: 16px;
         }
 
         .modal-input {
-            background: #2c2c2e;
-            border: none;
-            border-radius: 14px;
-            padding: 16px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
+            background: #2c2c2e; border: none; border-radius: 14px;
+            padding: 16px; color: white; font-size: 1rem; outline: none;
         }
 
-        .modal-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 8px;
-        }
-
-        .btn {
-            padding: 16px;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-cancel {
-            background-color: var(--card-white);
-            color: #000000;
-        }
-
-        .btn-confirm {
-            background-color: var(--accent-lime);
-            color: #000000;
-        }
+        .btn { padding: 16px; border-radius: 14px; font-size: 1rem; font-weight: bold; border: none; cursor: pointer; }
+        .btn-cancel { background-color: var(--card-white); color: #000000; }
+        .btn-confirm { background-color: var(--accent-lime); color: #000000; }
     </style>
 </head>
 <body>
 
     <div class="mobile-frame">
-        <div class="top-nav">
-            <div class="user-profile">
-                <div class="avatar">👤</div>
-                <span>Welcome back, Chad</span>
+        <div id="auth-view" class="auth-screen">
+            <div class="main-title">STAY<br>ACCOUNTABLE</div>
+            <input type="email" id="auth-email" class="modal-input" placeholder="Email Address">
+            <input type="password" id="auth-password" class="modal-input" placeholder="Password">
+            <button class="btn btn-confirm" onclick="handleAuth('login')">LOGIN</button>
+            <button class="btn btn-cancel" onclick="handleAuth('signup')">CREATE ACCOUNT</button>
+        </div>
+
+        <div id="app-view" style="display: none;">
+            <div class="top-nav">
+                <div class="user-profile">
+                    <span>⚡ Welcome, Chad</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
             </div>
-            <div class="nav-icons">
-                <span>🔍</span>
-                <span>🔔</span>
+
+            <div class="main-title">Your Notes</div>
+            
+            <div class="marks-row">
+                <div class="marks-counter" id="marks-display">0 / 0 MARKS</div>
+                <button class="action-icon-btn" onclick="openModal()">+</button>
             </div>
-        </div>
 
-        <div class="main-title">Your Notes</div>
-        
-        <div class="marks-row">
-            <div class="marks-counter" id="marks-display">0 / 0 MARKS</div>
-            <button class="action-icon-btn" onclick="openModal()">+</button>
+            <div class="tasks-grid" id="grid-container"></div>
         </div>
-
-        <div class="filter-container">
-            <button class="tag active">#All</button>
-            <button class="tag">#work</button>
-            <button class="tag">#Personal</button>
-            <button class="tag">#Fitness</button>
-        </div>
-
-        <div class="tasks-grid" id="grid-container"></div>
     </div>
 
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal-content">
-            <div class="modal-title">New Task & Marks</div>
-            <input type="text" id="task-input" class="modal-input" placeholder="Type assignment objective..." autocomplete="off">
-            <div class="modal-buttons">
+            <div class="modal-title" style="font-family: 'Impact-Custom'; font-size: 2rem;">New Task & Marks</div>
+            <input type="text" id="task-input" class="modal-input" placeholder="Type assignment objective...">
+            <div class="modal-buttons" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
                 <button class="btn btn-confirm" onclick="addNewTask()">Confirm</button>
             </div>
         </div>
     </div>
 
-    <script>
-        let tasks = JSON.parse(localStorage.getItem('brutalTasks')) || [];
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // 1. RENDER INTERFACE GRID LAYOUT
+        // ⚠️ PASTE YOUR COPIED FIREBASE CONFIG OBJECT HERE
+        const firebaseConfig = {
+            apiKey: "AIzaSyArhiDmd8NEUnRAAZasFzxtY8aDCofErJk",
+            authDomain: "achiver-9fd13.firebaseapp.com",
+            projectId: "achiver-9fd13",
+            storageBucket: "achiver-9fd13.firebasestorage.app",
+            messagingSenderId: "909106740204",
+            appId: "1:909106740204:web:fce2bce74d914881dddec9"
+        };
+
+        // Initialize Firebase instances
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let tasksArray = [];
+
+        // --- AUTH LOGIC ---
+        window.handleAuth = async (type) => {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            try {
+                if (type === 'signup') await createUserWithEmailAndPassword(auth, email, password);
+                else await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) { alert(err.message); }
+        };
+
+        window.logout = () => signOut(auth);
+
+        // Listen for user profile state shifts
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('auth-view').style.display = 'none';
+                document.getElementById('app-view').style.display = 'block';
+                syncTasks();
+                setInterval(checkDailyReset, 20000); // Check reset status in the background
+            } else {
+                currentUser = null;
+                document.getElementById('auth-view').style.display = 'flex';
+                document.getElementById('app-view').style.display = 'none';
+            }
+        });
+
+        // --- LIVE DATABASE SYNC ---
+        function syncTasks() {
+            const q = query(collection(db, "tasks"), where("userId", "==", currentUser.uid));
+            onSnapshot(q, (snapshot) => {
+                tasksArray = [];
+                snapshot.forEach(doc => {
+                    tasksArray.push({ id: doc.id, ...doc.data() });
+                });
+                renderUI();
+                checkDailyReset();
+            });
+        }
+
+        // --- RENDER SCREEN UI ---
         function renderUI() {
             const grid = document.getElementById('grid-container');
-            const marksDisplay = document.getElementById('marks-display');
-            
-            grid.innerHTML = '';
             let completedCount = 0;
+            grid.innerHTML = '';
 
-            tasks.forEach((task, index) => {
+            tasksArray.forEach(task => {
                 if (task.isCompleted) completedCount++;
 
                 const card = document.createElement('div');
                 card.className = `task-card ${task.isCompleted ? 'completed' : ''}`;
-                card.onclick = () => toggleTask(index);
-
+                card.onclick = () => toggleTask(task.id, task.isCompleted);
                 card.innerHTML = `
                     <div class="card-header-text">${task.title}</div>
                     <div class="card-footer">
-                        <span class="date-subtext">${task.dateCreated}</span>
+                        <span class="date-subtext">Task Active</span>
                         <div class="status-icon">${task.isCompleted ? '✓' : '✖'}</div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
-
-            marksDisplay.innerHTML = `<span>${completedCount}</span> / ${tasks.length} MARKS`;
-            localStorage.setItem('brutalTasks', JSON.stringify(tasks));
+            document.getElementById('marks-display').innerHTML = `<span>${completedCount}</span> / ${tasksArray.length} MARKS`;
         }
 
-        // 2. TOGGLE COMPLETE FLAG
-        function toggleTask(index) {
-            tasks[index].isCompleted = !tasks[index].isCompleted;
-            renderUI();
-        }
-
-        // 3. ACTION HANDLERS FOR MODAL MODES
-        function openModal() { document.getElementById('modal-overlay').style.display = 'flex'; document.getElementById('task-input').focus(); }
-        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; document.getElementById('task-input').value = ''; }
-
-        function addNewTask() {
-            const textInput = document.getElementById('task-input').value.trim();
-            if(!textInput) return;
-
-            const formattedDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-
-            tasks.push({
-                title: textInput,
+        // --- DATABASE ACTIONS ---
+        window.addNewTask = async () => {
+            const input = document.getElementById('task-input');
+            if (!input.value.trim()) return;
+            await addDoc(collection(db, "tasks"), {
+                title: input.value.trim(),
                 isCompleted: false,
-                dateCreated: formattedDate
+                userId: currentUser.uid
             });
-
             closeModal();
-            renderUI();
-        }
+        };
 
-        // 4. AUTOMATED 24-HOUR RESET SCHEDULER (RESPAWN LOOP)
-        function triggerDailyReset() {
-            const savedResetDay = localStorage.getItem('lastBrutalResetDay');
-            const systemToday = new Date().toDateString();
+        window.toggleTask = async (id, currentStatus) => {
+            await updateDoc(doc(db, "tasks", id), { isCompleted: !currentStatus });
+        };
 
-            // Resets flags back to incomplete if date transitions forward
-            if (savedResetDay !== systemToday) {
-                tasks = tasks.map(t => ({ ...t, isCompleted: false }));
-                localStorage.setItem('lastBrutalResetDay', systemToday);
-                renderUI();
+        // --- AUTOMATIC 24-HOUR CLOCK RESET ---
+        async function checkDailyReset() {
+            const todayStr = new Date().toDateString();
+            const lastReset = localStorage.getItem(`lastReset_${currentUser.uid}`);
+
+            if (lastReset !== todayStr && tasksArray.length > 0) {
+                const batch = writeBatch(db);
+                tasksArray.forEach(task => {
+                    if (task.isCompleted) {
+                        const ref = doc(db, "tasks", task.id);
+                        batch.update(ref, { isCompleted: false });
+                    }
+                });
+                await batch.commit();
+                localStorage.setItem(`lastReset_${currentUser.uid}`, todayStr);
             }
         }
 
-        // Boot-up checks
-        triggerDailyReset();
-        renderUI();
-
-        // Active background heartbeat listening loop
-        setInterval(triggerDailyReset, 15000);
+        // --- UI DRAWERS OVERLAYS ---
+        window.openModal = () => { document.getElementById('modal-overlay').style.display = 'flex'; document.getElementById('task-input').focus(); }
+        window.closeModal = () => { document.getElementById('modal-overlay').style.display = 'none'; document.getElementById('task-input').value = ''; }
     </script>
 </body>
 </html>
