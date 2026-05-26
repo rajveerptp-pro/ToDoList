@@ -595,31 +595,57 @@
 
         // --- ANALYTICS ENGINE ---
         function calculateAnalytics() {
-            let totalTasks = tasksArray.length;
-            let completedTasks = tasksArray.filter(t => t.isCompleted).length;
-            const accuracy = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+           let totalTasks = tasksArray.length;
+    let completedTasks = tasksArray.filter(t => t.isCompleted).length;
+    const accuracy = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+    
+    document.getElementById('weekly-accuracy').innerText = `${accuracy}%`;
+    document.getElementById('weekly-total-completed').innerText = completedTasks;
 
-            document.getElementById('weekly-accuracy').innerText = `${accuracy}%`;
-            document.getElementById('weekly-total-completed').innerText = completedTasks;
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const currentDayName = days[new Date().getDay()];
 
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const currentDayName = days[new Date().getDay()];
-            localStorage.setItem(`history_${currentUser.uid}_${currentDayName}`, accuracy);
-
-            days.forEach(day => {
-                const targetBar = document.getElementById(`bar-${day}`);
-                if (targetBar) {
-                    const savedVal = localStorage.getItem(`history_${currentUser.uid}_${day}`) || 0;
-                    targetBar.style.height = `${savedVal}%`;
-                    if (parseInt(savedVal) > 0) targetBar.classList.add('active');
-                }
+    // Save today's accuracy straight to Firestore instead of localStorage
+    if (currentUser) {
+        try {
+             updateDoc(doc(db, "analytics", `${currentUser.uid}_${currentDayName}`), {
+                accuracy: accuracy,
+                userId: currentUser.uid,
+                day: currentDayName
             });
+        } catch (e) {
+            // If the document doesn't exist yet, create it
+             addDoc(collection(db, "analytics"), {
+                accuracy: accuracy,
+                userId: currentUser.uid,
+                day: currentDayName
+            }).catch(err => console.error("Analytics save failed:", err));
+        }
+    }
 
-            const msg = document.getElementById('grade-message');
-            if (accuracy >= 90) msg.innerHTML = "STATUS: <span>ELITE</span>. YOU ARE DESTROYING ASSIGNMENTS.";
-            else if (accuracy >= 75) msg.innerHTML = "STATUS: <span>STRONG</span>. KEEP PUSHING.";
-            else if (accuracy >= 50) msg.innerHTML = "STATUS: <span>AVERAGE</span>. EXECUTE EARLIER.";
-            else msg.innerHTML = "STATUS: <span>FAILURE MODE</span>. WORK HARDER.";
+    // Render the chart bars by fetching the data from your Firestore state
+    days.forEach(async (day) => {
+        const targetBar = document.getElementById(`bar-${day}`);
+        if (targetBar) {
+            let savedVal = 0;
+            if (currentUser) {
+                // Read directly from the synced local task state or safely assume 0 if not updated today
+                if (day === currentDayName) {
+                    savedVal = accuracy;
+                } else {
+                    savedVal = localStorage.getItem(`history_${currentUser.uid}_${day}`) || 0; 
+                }
+            }
+            targetBar.style.height = `${savedVal}%`;
+            if (parseInt(savedVal) > 0) targetBar.classList.add('active');
+        }
+    });
+
+    const msg = document.getElementById('grade-message');
+    if (accuracy >= 90) msg.innerHTML = "STATUS: <span>ELITE</span>. YOU ARE DESTROYING ASSIGNMENTS.";
+    else if (accuracy >= 75) msg.innerHTML = "STATUS: <span>STRONG</span>. KEEP PUSHING.";
+    else if (accuracy >= 50) msg.innerHTML = "STATUS: <span>AVERAGE</span>. EXECUTE EARLIER.";
+    else msg.innerHTML = "STATUS: <span>FAILURE MODE</span>. WORK HARDER.";
         }
 
         // --- MODAL CONTROLS ---
